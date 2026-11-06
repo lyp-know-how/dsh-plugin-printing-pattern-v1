@@ -8,7 +8,6 @@ window.__ModuleLoader__.load({
     const NS = 'yinran-pattern-assistant';
     const KEY = 'yinran-pattern-assistant';
     const API = '/yinran-assistant/generate';
-    const TOKEN_META = 'yinran-pattern-token';
 
     const NEED_EXAMPLES = ['法式复古碎花', '新中式水墨', '美式复古格纹', '日系小碎花'];
     const FABRIC_EXAMPLES = ['真丝', '涤纶', '棉麻', '针织'];
@@ -71,7 +70,7 @@ window.__ModuleLoader__.load({
       'error.MODEL_TIMEOUT': '模型响应超时，请再生成一次。',
       'error.BAD_FORMAT': '模型返回格式异常，请再生成一次。',
       'error.BAD_ORIGIN': '请求来源校验失败，请从 DSH 页面内使用。',
-      'error.UNAUTHORIZED': '页面授权已过期，请刷新 DSH 页面后再试。',
+      'error.UNAUTHORIZED': '登录状态已失效，请刷新 DSH 页面后再试。',
       'error.INVALID_METHOD': '请求方式不正确。',
       'error.BAD_CONTENT_TYPE': '请求格式不正确。',
       'error.BODY_TOO_LARGE': '输入内容过长，请精简后再试。',
@@ -137,7 +136,7 @@ window.__ModuleLoader__.load({
       'error.MODEL_TIMEOUT': 'The model timed out. Generate again.',
       'error.BAD_FORMAT': 'The model returned an unexpected format. Generate again.',
       'error.BAD_ORIGIN': 'Request origin rejected. Use this from the DSH page.',
-      'error.UNAUTHORIZED': 'This page authorization has expired. Refresh the DSH page and try again.',
+      'error.UNAUTHORIZED': 'Your DSH session has expired. Refresh the page and try again.',
       'error.INVALID_METHOD': 'Invalid request method.',
       'error.BAD_CONTENT_TYPE': 'Invalid request format.',
       'error.BODY_TOO_LARGE': 'The input is too long. Shorten it and try again.',
@@ -774,12 +773,6 @@ window.__ModuleLoader__.load({
             h('span'), h('span'), h('span'), h('span'))));
     }
 
-    function readPageToken() {
-      if (typeof document === 'undefined') return '';
-      const meta = document.querySelector(`meta[name="${TOKEN_META}"]`);
-      return meta && typeof meta.content === 'string' ? meta.content : '';
-    }
-
     function normalizePlan(raw, need, fabric) {
       const source = raw && typeof raw === 'object' ? raw : {};
       const strings = (value) => Array.isArray(value)
@@ -904,10 +897,7 @@ window.__ModuleLoader__.load({
         try {
           const response = await fetch(API, {
             method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-              'x-yinran-token': readPageToken(),
-            },
+            headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ customerNeed: cleanNeed, fabric: cleanFabric }),
             signal: controller.signal,
           });

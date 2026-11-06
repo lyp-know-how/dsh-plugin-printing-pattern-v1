@@ -1,14 +1,11 @@
 /**
  * Host half of 印染花型防坑助手.
  *
- * One same-origin endpoint turns the two form fields into a model request and
- * returns the four-part plan. The Client half owns every visual concern.
+ * One authenticated endpoint turns the two form fields into a model request
+ * and returns the four-part plan. The Client half owns every visual concern.
  */
 
-import { randomBytes } from 'node:crypto';
-
 const ROUTE = '/yinran-assistant/generate';
-const TOKEN_META = 'yinran-pattern-token';
 const MAX_BODY_BYTES = 8 * 1024;
 const MAX_FIELD_CHARS = 300;
 const MAX_CONCURRENT_GENERATIONS = 2;
@@ -62,17 +59,6 @@ function sendJson(res, status, payload) {
 
 function firstHeader(value) {
   return Array.isArray(value) ? value[0] : value;
-}
-
-function isSameOrigin(req, fallbackHost) {
-  const origin = firstHeader(req.headers.origin);
-  const host = firstHeader(req.headers.host) || fallbackHost;
-  if (!origin || !host) return false;
-  try {
-    return new URL(origin).host === host;
-  } catch {
-    return false;
-  }
 }
 
 function readBody(req) {
@@ -317,38 +303,26 @@ async function generatePlan(ctx, selection, customerNeed, fabric) {
   return normalizePlan(parseModelJson(text), customerNeed, fabric);
 }
 
-export const inject = ['webServer', 'llm', 'agentDefaultModel'];
+export const inject = ['webServer', 'llm', 'agentDefaultModel', 'connection'];
 
 export function apply(ctx) {
   let inFlight = 0;
-  let fallbackHost = '';
-  const clientToken = randomBytes(32).toString('hex');
-  try {
-    fallbackHost = new URL(ctx.webServer.getOrigin()).host;
-  } catch {
-    fallbackHost = '';
-  }
-
-  ctx.effect(() =>
-    ctx.webServer.tapIndex((html) => {
-      const tag = `<meta name="${TOKEN_META}" content="${clientToken}">`;
-      const at = html.search(/<\/head>/i);
-      return at < 0 ? `${tag}${html}` : `${html.slice(0, at)}${tag}${html.slice(at)}`;
-    }),
-  );
 
   const handle = async (req, res) => {
     try {
+      const rejection = ctx.connection.requestRejection({ headers: req.headers });
+      if (rejection !== undefined) {
+        sendJson(res, rejection, {
+          ok: false,
+          error: {
+            code: rejection === 401 ? 'UNAUTHORIZED' : 'BAD_ORIGIN',
+            message: rejection === 401 ? 'DSH session authentication required' : 'request origin rejected',
+          },
+        });
+        return;
+      }
       if (req.method !== 'POST') {
         sendJson(res, 405, { ok: false, error: { code: 'INVALID_METHOD', message: 'POST required' } });
-        return;
-      }
-      if (!isSameOrigin(req, fallbackHost)) {
-        sendJson(res, 403, { ok: false, error: { code: 'BAD_ORIGIN', message: 'same-origin request required' } });
-        return;
-      }
-      if (firstHeader(req.headers['x-yinran-token']) !== clientToken) {
-        sendJson(res, 401, { ok: false, error: { code: 'UNAUTHORIZED', message: 'page token required' } });
         return;
       }
       const contentType = firstHeader(req.headers['content-type']) || '';
