@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Indigo floral rosette on a warm textile swatch">
+  <defs>
+    <linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f5ead9"/>
+      <stop offset="1" stop-color="#e8d5bd"/>
+    </linearGradient>
+    <linearGradient id="petal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b5f63"/>
+      <stop offset="1" stop-color="#173f46"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="#132f35"/>
+  <rect x="10" y="10" width="108" height="108" rx="24" fill="url(#cloth)"/>
+  <path d="M18 41h12M18 52h8M98 76h12M104 87h6M26 99v-7M37 99v-11" stroke="#b05f49" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+  <path d="M64 29c9 0 16 5.2 16 12.4C80 49 73 55 64 55s-16-6-16-13.6C48 34.2 55 29 64 29Z" fill="url(#petal)"/>
+  <path d="M88 45.5c6.2 6.2 6.2 15.4 0 21.6S72.6 73.3 66.4 67.1 60.2 51.7 66.4 45.5s15.4-6.2 21.6 0Z" fill="url(#petal)" opacity=".88"/>
+  <path d="M79.4 79.4c-6.2 6.2-15.4 6.2-21.6 0s-6.2-15.4 0-21.6 15.4-6.2 21.6 0 6.2 15.4 0 21.6Z" fill="url(#petal)" opacity=".76"/>
+  <path d="M48.6 79.4c-6.2-6.2-6.2-15.4 0-21.6s15.4-6.2 21.6 0 6.2 15.4 0 21.6-15.4 6.2-21.6 0Z" fill="url(#petal)" opacity=".64"/>
+  <path d="M40 45.5c6.2-6.2 15.4-6.2 21.6 0s6.2 15.4 0 21.6-15.4 6.2-21.6 0-6.2-15.4 0-21.6Z" fill="url(#petal)" opacity=".52"/>
+  <circle cx="64" cy="62.5" r="10" fill="#d9a441"/>
+  <circle cx="64" cy="62.5" r="4.6" fill="#f5ead9"/>
+  <path d="M64 87v14" stroke="#2b5f63" stroke-width="3" stroke-linecap="round"/>
+  <path d="M64 92c-6 0-9-3-10-7 5 0 8 2 10 7Zm0 5c6 0 9-3 10-7-5 0-8 2-10 7Z" fill="#2b5f63" opacity=".8"/>
+  <path d="M34 34c0 4-3 7-7 7" stroke="#b05f49" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+</svg>

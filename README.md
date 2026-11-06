@@ -1,2 +1,23 @@
-# dsh-plugin-printing-pattern-v1
-A DSH plugin for the textile printing industry. Generates AI image prompts based on customer needs, with built-in copyright warnings and manufacturing constraints.
+# 印染花型防坑助手
+
+DSH 侧边栏插件：把「客户需求 + 面料材质」交给默认大模型，按四个维度返回可落地的印花方案。
+
+## 功能
+
+- **AI 生图 Prompt（中英双语）**：英文 Midjourney 提示词，强制包含 `seamless pattern`、`--tile` 和画幅参数。
+- **版权防雷提示**：固定风险警告 + 2 条具体改图建议（花瓣密度、主色调、构图、肌理等）。
+- **工艺可行性排雷**：按面料判断适用印花方式、色牢度、缩水、渗化、套色、后整理等风险。
+- **交付话术**：一段可直接发客户的初稿说明，明确上机需对色。
+
+## 使用
+
+1. 安装并启用本 bundle 后，刷新 DSH 页面。
+2. 点击左侧栏底部的五瓣花图标「花型防坑」。
+3. 填写「客户需求」和「面料材质」，点「生成方案」（也可 `Ctrl/⌘ + Enter`）。
+4. 用各卡片的「复制」按钮取用 Prompt 或话术，或「复制全部」取整份方案。
+
+插件调用当前 DSH 默认模型（设置中的默认模型），不额外保存密钥。服务端接口 `POST /yinran-assistant/generate` 只接受带当前页面令牌的同源请求。
+
+## 说明
+
+AI 初稿仅供打样参考；版权与工艺结论仍需实物打样、对色和法务检索确认。
